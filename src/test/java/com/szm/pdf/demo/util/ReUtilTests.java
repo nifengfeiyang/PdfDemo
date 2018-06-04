@@ -1,28 +1,93 @@
 package com.szm.pdf.demo.util;
 
 import cn.hutool.core.util.ReUtil;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.pdf.AcroFields;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
+import org.apache.pdfbox.pdmodel.interactive.form.PDField;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.junit.Test;
 
+import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ReUtilTests {
 
     @Test
-    public void test() throws Exception {
-        String content ="{\"code\":\"200\",\"json\":[\"111\"],\"message\":\"true\"}";
-         String regex = "\"json\":(.*?),\"message\"";// 使用非贪婪模式！
-//        List<String> resultFindAll = ReUtil.findAll("\\[\"(.*?)\"\\]", content,1, new ArrayList<String>());
-        List<String> resultFindAll = ReUtil.findAll(regex, content,0, new ArrayList<String>());
-        System.out.println(resultFindAll.get(0));
+    public void testReadPdf() throws Exception, IOException {
+        PDDocument helloDocument = null;
+//        helloDocument = PDDocument.load(new File("E:\\13_48_52_1527745732093_129876.pdf"));
+        helloDocument = PDDocument.load(new File("E:\\word2pdf_out.pdf"));
+        PDFTextStripper textStripper = new PDFTextStripper();
+        System.out.println(textStripper.getText(helloDocument));
+
+        helloDocument.close();
     }
     @Test
-    public void test2() throws Exception {
-        String content ="{\"success\":true,\"description\":\"ok\",\"biz\":{\"data\":\"{\\\"success\\\":true,\\\"risk_items\\\":[{\\\"risk_level\\\":\\\"low\\\",\\\"item_detail\\\":{\\\"namelist_hit_details\\\":[{\\\"hit_type_displayname\\\":\\\"\\u501f\\u6b3e\\u4eba\\u8eab\\u4efd\\u8bc1\\\",\\\"fraud_type\\\":\\\"\\u5f02\\u5e38\\u501f\\u6b3e\\\",\\\"description\\\":\\\"\\u8eab\\u4efd\\u8bc1\\u547d\\u4e2d\\u4e2d\\u98ce\\u9669\\u5173\\u6ce8\\u540d\\u5355\\\",\\\"type\\\":\\\"grey_list\\\"}],\\\"fraud_type\\\":\\\"\\u5f02\\u5e38\\u501f\\u6b3e\\\"},\\\"item_id\\\":2597694,\\\"item_name\\\":\\\"\\u8eab\\u4efd\\u8bc1\\u547d\\u4e2d\\u4e2d\\u98ce\\u9669\\u5173\\u6ce8\\u540d\\u5355\\\",\\\"group\\\":\\\"\\u4e0d\\u826f\\u4fe1\\u606f\\u626b\\u63cf\\\"},{\\\"risk_level\\\":\\\"low\\\",\\\"item_detail\\\":{\\\"namelist_hit_details\\\":[{\\\"hit_type_displayname\\\":\\\"\\u501f\\u6b3e\\u4eba\\u624b\\u673a\\\",\\\"fraud_type\\\":\\\"\\u5f02\\u5e38\\u501f\\u6b3e\\\",\\\"description\\\":\\\"\\u624b\\u673a\\u53f7\\u547d\\u4e2d\\u4f4e\\u98ce\\u9669\\u5173\\u6ce8\\u540d\\u5355\\\",\\\"type\\\":\\\"grey_list\\\"}],\\\"fraud_type\\\":\\\"\\u5f02\\u5e38\\u501f\\u6b3e\\\"},\\\"item_id\\\":2597728,\\\"item_name\\\":\\\"\\u624b\\u673a\\u53f7\\u547d\\u4e2d\\u4f4e\\u98ce\\u9669\\u5173\\u6ce8\\u540d\\u5355\\\",\\\"group\\\":\\\"\\u4e0d\\u826f\\u4fe1\\u606f\\u626b\\u63cf\\\"},{\\\"risk_level\\\":\\\"low\\\",\\\"item_detail\\\":{\\\"frequency_detail_list\\\":[{\\\"detail\\\":\\\"3\\u4e2a\\u6708\\u8eab\\u4efd\\u8bc1\\u5173\\u8054\\u5bb6\\u5ead\\u5730\\u5740\\u6570\\uff1a0\\\"},{\\\"detail\\\":\\\"3\\u6708\\u5185_\\u8eab\\u4efd\\u8bc1_\\u501f\\u6b3e\\u4eba\\u90ae\\u7bb1_\\u5173\\u8054\\u4e2a\\u6570_\\u5168\\u5c40\\uff1a0\\\"},{\\\"data\\\":[\\\"17864874171\\\",\\\"178\\u203b\\u203b\\u203b\\u203b1841\\\",\\\"13314851587\\\",\\\"13521123896\\\"],\\\"detail\\\":\\\"3\\u6708\\u5185_\\u8eab\\u4efd\\u8bc1_\\u624b\\u673a\\u53f7\\u7801_\\u5173\\u8054\\u4e2a\\u6570_\\u5168\\u5c40\\uff1a4\\\"}],\\\"type\\\":\\\"frequency_detail\\\"},\\\"item_id\\\":2597786,\\\"item_name\\\":\\\"3\\u4e2a\\u6708\\u5185\\u8eab\\u4efd\\u8bc1\\u5173\\u8054\\u591a\\u4e2a\\u7533\\u8bf7\\u4fe1\\u606f\\\",\\\"group\\\":\\\"\\u5ba2\\u6237\\u884c\\u4e3a\\u68c0\\u6d4b\\\"},{\\\"risk_level\\\":\\\"low\\\",\\\"item_detail\\\":{\\\"frequency_detail_list\\\":[{\\\"detail\\\":\\\"7\\u5929\\u5185_\\u8eab\\u4efd\\u8bc1_\\u51fa\\u73b0\\u6b21\\u6570_\\u672c\\u5e94\\u7528\\uff1a3\\\"},{\\\"detail\\\":\\\"7\\u5929\\u5185_\\u624b\\u673a\\u53f7\\u7801_\\u51fa\\u73b0\\u6b21\\u6570_\\u672c\\u5e94\\u7528\\uff1a3\\\"}],\\\"type\\\":\\\"frequency_detail\\\"},\\\"item_id\\\":2597806,\\\"item_name\\\":\\\"7\\u5929\\u5185\\u8bbe\\u5907\\u6216\\u8eab\\u4efd\\u8bc1\\u6216\\u624b\\u673a\\u53f7\\u7533\\u8bf7\\u6b21\\u6570\\u8fc7\\u591a\\\",\\\"group\\\":\\\"\\u5ba2\\u6237\\u884c\\u4e3a\\u68c0\\u6d4b\\\"},{\\\"risk_level\\\":\\\"medium\\\",\\\"item_detail\\\":{\\\"platform_detail_dimension\\\":[{\\\"count\\\":1,\\\"detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:1\\\"],\\\"dimension\\\":\\\"\\u501f\\u6b3e\\u4eba\\u624b\\u673a\\u8be6\\u60c5\\\"},{\\\"count\\\":2,\\\"detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:2\\\"],\\\"dimension\\\":\\\"\\u501f\\u6b3e\\u4eba\\u8eab\\u4efd\\u8bc1\\u8be6\\u60c5\\\"}],\\\"platform_detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:2\\\"],\\\"platform_count\\\":2,\\\"type\\\":\\\"platform_detail\\\"},\\\"item_id\\\":2597822,\\\"item_name\\\":\\\"1\\u4e2a\\u6708\\u5185\\u7533\\u8bf7\\u4eba\\u5728\\u591a\\u4e2a\\u5e73\\u53f0\\u7533\\u8bf7\\u501f\\u6b3e\\\",\\\"group\\\":\\\"\\u591a\\u5e73\\u53f0\\u501f\\u8d37\\u7533\\u8bf7\\u68c0\\u6d4b\\\"},{\\\"risk_level\\\":\\\"medium\\\",\\\"item_detail\\\":{\\\"platform_detail_dimension\\\":[{\\\"count\\\":2,\\\"detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:1\\\",\\\"\\u4fe1\\u7528\\u5361\\u4e2d\\u5fc3:1\\\"],\\\"dimension\\\":\\\"\\u501f\\u6b3e\\u4eba\\u624b\\u673a\\u8be6\\u60c5\\\"},{\\\"count\\\":2,\\\"detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:2\\\"],\\\"dimension\\\":\\\"\\u501f\\u6b3e\\u4eba\\u8eab\\u4efd\\u8bc1\\u8be6\\u60c5\\\"}],\\\"platform_detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:2\\\",\\\"\\u4fe1\\u7528\\u5361\\u4e2d\\u5fc3:1\\\"],\\\"platform_count\\\":3,\\\"type\\\":\\\"platform_detail\\\"},\\\"item_id\\\":2597824,\\\"item_name\\\":\\\"3\\u4e2a\\u6708\\u5185\\u7533\\u8bf7\\u4eba\\u5728\\u591a\\u4e2a\\u5e73\\u53f0\\u7533\\u8bf7\\u501f\\u6b3e\\\",\\\"group\\\":\\\"\\u591a\\u5e73\\u53f0\\u501f\\u8d37\\u7533\\u8bf7\\u68c0\\u6d4b\\\"},{\\\"risk_level\\\":\\\"medium\\\",\\\"item_detail\\\":{\\\"platform_detail_dimension\\\":[{\\\"count\\\":2,\\\"detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:1\\\",\\\"\\u4fe1\\u7528\\u5361\\u4e2d\\u5fc3:1\\\"],\\\"dimension\\\":\\\"\\u501f\\u6b3e\\u4eba\\u624b\\u673a\\u8be6\\u60c5\\\"},{\\\"count\\\":2,\\\"detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:2\\\"],\\\"dimension\\\":\\\"\\u501f\\u6b3e\\u4eba\\u8eab\\u4efd\\u8bc1\\u8be6\\u60c5\\\"}],\\\"platform_detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:2\\\",\\\"\\u4fe1\\u7528\\u5361\\u4e2d\\u5fc3:1\\\"],\\\"platform_count\\\":3,\\\"type\\\":\\\"platform_detail\\\"},\\\"item_id\\\":2597826,\\\"item_name\\\":\\\"6\\u4e2a\\u6708\\u5185\\u7533\\u8bf7\\u4eba\\u5728\\u591a\\u4e2a\\u5e73\\u53f0\\u7533\\u8bf7\\u501f\\u6b3e\\\",\\\"group\\\":\\\"\\u591a\\u5e73\\u53f0\\u501f\\u8d37\\u7533\\u8bf7\\u68c0\\u6d4b\\\"},{\\\"risk_level\\\":\\\"low\\\",\\\"item_detail\\\":{\\\"platform_detail_dimension\\\":[{\\\"count\\\":3,\\\"detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:1\\\",\\\"\\u4fe1\\u7528\\u5361\\u4e2d\\u5fc3:1\\\",\\\"P2P\\u7f51\\u8d37:1\\\"],\\\"dimension\\\":\\\"\\u501f\\u6b3e\\u4eba\\u624b\\u673a\\u8be6\\u60c5\\\"},{\\\"count\\\":5,\\\"detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:4\\\",\\\"P2P\\u7f51\\u8d37:1\\\"],\\\"dimension\\\":\\\"\\u501f\\u6b3e\\u4eba\\u8eab\\u4efd\\u8bc1\\u8be6\\u60c5\\\"}],\\\"platform_detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:4\\\",\\\"\\u4fe1\\u7528\\u5361\\u4e2d\\u5fc3:1\\\",\\\"P2P\\u7f51\\u8d37:1\\\"],\\\"platform_count\\\":6,\\\"type\\\":\\\"platform_detail\\\"},\\\"item_id\\\":2597828,\\\"item_name\\\":\\\"12\\u4e2a\\u6708\\u5185\\u7533\\u8bf7\\u4eba\\u5728\\u591a\\u4e2a\\u5e73\\u53f0\\u7533\\u8bf7\\u501f\\u6b3e\\\",\\\"group\\\":\\\"\\u591a\\u5e73\\u53f0\\u501f\\u8d37\\u7533\\u8bf7\\u68c0\\u6d4b\\\"},{\\\"risk_level\\\":\\\"low\\\",\\\"item_detail\\\":{\\\"platform_detail_dimension\\\":[{\\\"count\\\":4,\\\"detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:1\\\",\\\"\\u4fe1\\u7528\\u5361\\u4e2d\\u5fc3:1\\\",\\\"P2P\\u7f51\\u8d37:2\\\"],\\\"dimension\\\":\\\"\\u501f\\u6b3e\\u4eba\\u624b\\u673a\\u8be6\\u60c5\\\"},{\\\"count\\\":6,\\\"detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:4\\\",\\\"P2P\\u7f51\\u8d37:2\\\"],\\\"dimension\\\":\\\"\\u501f\\u6b3e\\u4eba\\u8eab\\u4efd\\u8bc1\\u8be6\\u60c5\\\"}],\\\"platform_detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:4\\\",\\\"\\u4fe1\\u7528\\u5361\\u4e2d\\u5fc3:1\\\",\\\"P2P\\u7f51\\u8d37:2\\\"],\\\"platform_count\\\":7,\\\"type\\\":\\\"platform_detail\\\"},\\\"item_id\\\":2597830,\\\"item_name\\\":\\\"18\\u4e2a\\u6708\\u5185\\u7533\\u8bf7\\u4eba\\u5728\\u591a\\u4e2a\\u5e73\\u53f0\\u7533\\u8bf7\\u501f\\u6b3e\\\",\\\"group\\\":\\\"\\u591a\\u5e73\\u53f0\\u501f\\u8d37\\u7533\\u8bf7\\u68c0\\u6d4b\\\"},{\\\"risk_level\\\":\\\"low\\\",\\\"item_detail\\\":{\\\"platform_detail_dimension\\\":[{\\\"count\\\":4,\\\"detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:1\\\",\\\"\\u4fe1\\u7528\\u5361\\u4e2d\\u5fc3:1\\\",\\\"P2P\\u7f51\\u8d37:2\\\"],\\\"dimension\\\":\\\"\\u501f\\u6b3e\\u4eba\\u624b\\u673a\\u8be6\\u60c5\\\"},{\\\"count\\\":8,\\\"detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:4\\\",\\\"\\u8d22\\u4ea7\\u4fdd\\u9669:1\\\",\\\"P2P\\u7f51\\u8d37:3\\\"],\\\"dimension\\\":\\\"\\u501f\\u6b3e\\u4eba\\u8eab\\u4efd\\u8bc1\\u8be6\\u60c5\\\"}],\\\"platform_detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:4\\\",\\\"\\u4fe1\\u7528\\u5361\\u4e2d\\u5fc3:1\\\",\\\"\\u8d22\\u4ea7\\u4fdd\\u9669:1\\\",\\\"P2P\\u7f51\\u8d37:3\\\"],\\\"platform_count\\\":9,\\\"type\\\":\\\"platform_detail\\\"},\\\"item_id\\\":2597832,\\\"item_name\\\":\\\"24\\u4e2a\\u6708\\u5185\\u7533\\u8bf7\\u4eba\\u5728\\u591a\\u4e2a\\u5e73\\u53f0\\u7533\\u8bf7\\u501f\\u6b3e\\\",\\\"group\\\":\\\"\\u591a\\u5e73\\u53f0\\u501f\\u8d37\\u7533\\u8bf7\\u68c0\\u6d4b\\\"},{\\\"risk_level\\\":\\\"low\\\",\\\"item_detail\\\":{\\\"platform_detail_dimension\\\":[{\\\"count\\\":4,\\\"detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:1\\\",\\\"\\u4fe1\\u7528\\u5361\\u4e2d\\u5fc3:1\\\",\\\"P2P\\u7f51\\u8d37:2\\\"],\\\"dimension\\\":\\\"\\u501f\\u6b3e\\u4eba\\u624b\\u673a\\u8be6\\u60c5\\\"},{\\\"count\\\":9,\\\"detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:5\\\",\\\"\\u8d22\\u4ea7\\u4fdd\\u9669:1\\\",\\\"P2P\\u7f51\\u8d37:3\\\"],\\\"dimension\\\":\\\"\\u501f\\u6b3e\\u4eba\\u8eab\\u4efd\\u8bc1\\u8be6\\u60c5\\\"}],\\\"platform_detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:5\\\",\\\"\\u4fe1\\u7528\\u5361\\u4e2d\\u5fc3:1\\\",\\\"\\u8d22\\u4ea7\\u4fdd\\u9669:1\\\",\\\"P2P\\u7f51\\u8d37:3\\\"],\\\"platform_count\\\":10,\\\"type\\\":\\\"platform_detail\\\"},\\\"item_id\\\":2597834,\\\"item_name\\\":\\\"\\u8fd160\\u4e2a\\u6708\\u4ee5\\u4e0a\\u7533\\u8bf7\\u4eba\\u5728\\u591a\\u4e2a\\u5e73\\u53f0\\u7533\\u8bf7\\u501f\\u6b3e\\\",\\\"group\\\":\\\"\\u591a\\u5e73\\u53f0\\u501f\\u8d37\\u7533\\u8bf7\\u68c0\\u6d4b\\\"},{\\\"risk_level\\\":\\\"low\\\",\\\"item_detail\\\":{\\\"platform_detail_dimension\\\":[{\\\"count\\\":1,\\\"detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:1\\\"],\\\"dimension\\\":\\\"\\u501f\\u6b3e\\u4eba\\u8eab\\u4efd\\u8bc1\\u8be6\\u60c5\\\"}],\\\"platform_detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:1\\\"],\\\"platform_count\\\":1,\\\"type\\\":\\\"platform_detail\\\"},\\\"item_id\\\":2597842,\\\"item_name\\\":\\\"12\\u4e2a\\u6708\\u5185\\u7533\\u8bf7\\u4eba\\u5728\\u591a\\u4e2a\\u5e73\\u53f0\\u88ab\\u653e\\u6b3e\\\",\\\"group\\\":\\\"\\u591a\\u5e73\\u53f0\\u501f\\u8d37\\u8d1f\\u503a\\u68c0\\u6d4b\\\"},{\\\"risk_level\\\":\\\"low\\\",\\\"item_detail\\\":{\\\"platform_detail_dimension\\\":[{\\\"count\\\":1,\\\"detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:1\\\"],\\\"dimension\\\":\\\"\\u501f\\u6b3e\\u4eba\\u8eab\\u4efd\\u8bc1\\u8be6\\u60c5\\\"}],\\\"platform_detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:1\\\"],\\\"platform_count\\\":1,\\\"type\\\":\\\"platform_detail\\\"},\\\"item_id\\\":2597844,\\\"item_name\\\":\\\"18\\u4e2a\\u6708\\u5185\\u7533\\u8bf7\\u4eba\\u5728\\u591a\\u4e2a\\u5e73\\u53f0\\u88ab\\u653e\\u6b3e\\\",\\\"group\\\":\\\"\\u591a\\u5e73\\u53f0\\u501f\\u8d37\\u8d1f\\u503a\\u68c0\\u6d4b\\\"},{\\\"risk_level\\\":\\\"low\\\",\\\"item_detail\\\":{\\\"platform_detail_dimension\\\":[{\\\"count\\\":1,\\\"detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:1\\\"],\\\"dimension\\\":\\\"\\u501f\\u6b3e\\u4eba\\u8eab\\u4efd\\u8bc1\\u8be6\\u60c5\\\"}],\\\"platform_detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:1\\\"],\\\"platform_count\\\":1,\\\"type\\\":\\\"platform_detail\\\"},\\\"item_id\\\":2597846,\\\"item_name\\\":\\\"24\\u4e2a\\u6708\\u5185\\u7533\\u8bf7\\u4eba\\u5728\\u591a\\u4e2a\\u5e73\\u53f0\\u88ab\\u653e\\u6b3e\\\",\\\"group\\\":\\\"\\u591a\\u5e73\\u53f0\\u501f\\u8d37\\u8d1f\\u503a\\u68c0\\u6d4b\\\"},{\\\"risk_level\\\":\\\"low\\\",\\\"item_detail\\\":{\\\"platform_detail_dimension\\\":[{\\\"count\\\":1,\\\"detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:1\\\"],\\\"dimension\\\":\\\"\\u501f\\u6b3e\\u4eba\\u8eab\\u4efd\\u8bc1\\u8be6\\u60c5\\\"}],\\\"platform_detail\\\":[\\\"\\u4e00\\u822c\\u6d88\\u8d39\\u5206\\u671f\\u5e73\\u53f0:1\\\"],\\\"platform_count\\\":1,\\\"type\\\":\\\"platform_detail\\\"},\\\"item_id\\\":2597848,\\\"item_name\\\":\\\"\\u8fd160\\u4e2a\\u6708\\u4ee5\\u4e0a\\u7533\\u8bf7\\u4eba\\u5728\\u591a\\u4e2a\\u5e73\\u53f0\\u88ab\\u653e\\u6b3e\\\",\\\"group\\\":\\\"\\u591a\\u5e73\\u53f0\\u501f\\u8d37\\u8d1f\\u503a\\u68c0\\u6d4b\\\"}],\\\"report_id\\\":\\\"ER201804021129250E919BE7\\\",\\\"final_score\\\":35,\\\"final_decision\\\":\\\"Review\\\",\\\"report_time\\\":1522639765000,\\\"apply_time\\\":1522639765000,\\\"application_id\\\":\\\"1804021129253593FF2991D75C2800C9\\\",\\\"address_detect\\\":{\\\"mobile_address\\\":\\\"\\u5c71\\u4e1c\\u7701\\u6cf0\\u5b89\\u5e02\\\",\\\"id_card_address\\\":\\\"\\u5c71\\u4e1c\\u7701\\u6d4e\\u5357\\u5e02\\u5546\\u6cb3\\u53bf\\\"}}\"}}";
-         String regex = "\\\\\\\"final_score\\\\\\\":(.*?),\\\\\\\"final_decision\\\\\\\"";// 使用非贪婪模式！
-//        List<String> resultFindAll = ReUtil.findAll("\\[\"(.*?)\"\\]", content,1, new ArrayList<String>());
-        List<String> resultFindAll = ReUtil.findAll(regex, content,1, new ArrayList<String>());
-        System.out.println(resultFindAll.get(0));
+    public void testOutputPdfbyTemplet() throws Exception, IOException {
+        PDDocument pdf = PDDocument.load(new File("E:\\word2pdf.pdf"));
+        InputStream templatePdf = new FileInputStream("E:\\word2pdf.pdf");
+//        PDDocumentCatalog docCatalog = pdf.getDocumentCatalog();
+//        PDAcroForm acroForm = docCatalog.getAcroForm();
+//        PDFont font = PDType1Font.HELVETICA_BOLD;//// TODO: 2018/6/1
+//
+//        PDField realNameField = acroForm.getField("fill_1");
+//        PDField ageField = acroForm.getField("Text3");
+//        PDField dateField = acroForm.getField("Text2");
+//
+//        realNameField.setValue( "1111");
+//        ageField.setValue( "28");
+//        dateField.setValue( "2017-12-11");
+//        pdf.save(new File("E:\\word2pdf_out.pdf") );
+        Map<String, String> paraMap = new HashMap<String, String>();
+        paraMap.put("fill_1","1111");
+        paraMap.put("Text3","28");
+        paraMap.put("Text2","2017-12-11");
+        Pdf(templatePdf,"E:\\\\word2pdf_out.pdf",paraMap);
+    }
+
+
+    public static String Pdf(InputStream templatePdf, String filePath, Map<String, String> paraMap) throws Exception {
+        PdfReader reader =null;
+        try {
+            File pdfFile = new File(filePath);
+            if(pdfFile.exists()) {
+                File file =new File(filePath);
+                file.delete();
+            }
+            reader = new PdfReader(templatePdf);
+            PdfStamper stamp = new PdfStamper(reader, new FileOutputStream(filePath));
+            BaseFont bf = BaseFont.createFont("STSongStd-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
+            @SuppressWarnings("unused")
+            Font FontChinese = new Font(bf, 12, Font.NORMAL);
+            AcroFields forms = stamp.getAcroFields();
+            forms.addSubstitutionFont(bf);
+            for (String key : paraMap.keySet()) {
+                if("null".equals(paraMap.get(key))){
+                    forms.setField(key, "");
+                }else{
+                    forms.setField(key, paraMap.get(key));
+                }
+            }
+            stamp.setFormFlattening(true);
+            stamp.close();
+        } catch (Exception de) {
+            System.err.println(de.getMessage());
+            filePath = null;
+        }finally {
+            reader.close();
+        }
+        return filePath;
     }
 
 
